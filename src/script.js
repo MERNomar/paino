@@ -12,3 +12,23 @@ const NOTE_DETAILS = [
 {note : "Bb" , key : "J" , frequency : 560.648 },
 {note : "B" , key : "M" , frequency : 590.645 },
 ]
+
+document.addEventListener('keyup' , e =>{
+    if (e.repeat) return
+    const keyCode = e.code
+    const noteDetail = getNoteDetail(keyCode)
+    if (noteDetail == null) return
+    console.log(noteDetail)
+
+
+
+})
+
+document.addEventListener('keyup' , e =>{
+    
+ 
+})
+
+function getNoteDetail(keyboardKey){
+    return NOTE_DETAILS.find(n => `Key${n.key}` === keyboardKey )
+}

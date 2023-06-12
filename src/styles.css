@@ -12,9 +12,8 @@ body{
 #allElements {
     display: flex;
 }
-.key {
 
-}
+
 .white {
     width: 100px;
     height:400px;
