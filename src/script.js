@@ -1,3 +1,5 @@
+const audioContext = new AudioContext()
+
 const NOTE_DETAILS = [
 {note : "C" , key : "Z" , frequency : 261.626 },
 {note : "Db" , key : "S" , frequency : 277.786 },
@@ -13,22 +15,52 @@ const NOTE_DETAILS = [
 {note : "B" , key : "M" , frequency : 590.645 },
 ]
 
-document.addEventListener('keyup' , e =>{
+document.addEventListener('keydown' , e =>{
     if (e.repeat) return
     const keyCode = e.code
     const noteDetail = getNoteDetail(keyCode)
     if (noteDetail == null) return
-    console.log(noteDetail)
-
+    noteDetail.active = true
+    playNote()
 
 
 })
 
 document.addEventListener('keyup' , e =>{
+    if (e.repeat) return
+    const keyCode = e.code
+    const noteDetail = getNoteDetail(keyCode)
+    if (noteDetail == null) return
+    noteDetail.active = false
+    playNote()
     
  
 })
 
 function getNoteDetail(keyboardKey){
     return NOTE_DETAILS.find(n => `Key${n.key}` === keyboardKey )
+}
+function playNote() {
+    NOTE_DETAILS.forEach(n => {
+const keyElement = document.querySelector(`[data-keys="${n.note}"]`)
+keyElement.classList.toggle("active" , n.active || false)
+if (n.oscillator != null){
+    n.oscillator.stop()
+    n.oscillator.disconnect()
+
+
+}
+    })
+    const activeNotes = NOTE_DETAILS.filter(n => n.active)
+    activeNotes.forEach(n => {
+        startNote(n)
+    })
+}
+function startNote(noteDetail) {
+    const oscillator = audioContext.createOscillator()
+    oscillator.frequency = noteDetail.frequency
+    oscillator.type = 'sine'
+    oscillator.connect(audioContext.destination)
+    oscillator.start()
+    noteDetail.oscillator = oscillator
 }
